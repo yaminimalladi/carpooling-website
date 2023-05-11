@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Carpooling Website</title>
+    <body style="background-image: url('images/carpooling.png');">
+
+    <link rel="stylesheet" href="style.css">
+
+  </head>
+  <body>
+    <div id="login-form">
+      <h2>Welcome to Denton Login:</h2>
+      <form action="backend.php?route=login" method="POST" onsubmit="return handleLogin(this)">
+        <input type="text" name="email" placeholder="Email">
+        <input type="password" name="password" placeholder="Password">
+        <div id="otp-input" style="display:none;">
+          <input type="text" name="otp" placeholder="OTP">
+        </div>
+        <button type="button" onclick="requestOTP()">Get OTP</button>
+        <button type="submit" id="login-button" style="display:none;">Login</button>
+      </form>
+      <p>Don't have an account? <a href="#" onclick="toggleForm()">Sign Up</a></p>
+    </div>
+    <div id="signup-form" style="display:none;">
+      <h2>Create a new user account:</h2>
+      <form action="backend.php?route=users" method="POST">
+        <input type="text" name="name" placeholder="Name">
+        <input type="text" name="email" placeholder="Email">
+        <input type="password" name="password" placeholder="Password">
+        <input type="text" name="phone" placeholder="Phone">
+        <button type="submit">Sign Up</button>
+      </form>
+      <p>Already have an account? <a href="#" onclick="toggleForm()">Log in</a></p>
+    </div>
+    <script>
+      function toggleForm() {
+        var loginForm = document.getElementById("login-form");
+        var signupForm = document.getElementById("signup-form");
+        if (loginForm.style.display === "none") {
+          loginForm.style.display = "block";
+          signupForm.style.display = "none";
+        } else {
+          loginForm.style.display = "none";
+          signupForm.style.display = "block";
+        }
+      }
+
+      function requestOTP() {
+        // Get the email from the login form
+        var email = document.getElementsByName("email")[0].value;
+
+        // Check if the email is valid
+        if (email === "") {
+          alert("Please enter your email");
+          return;
+        }
+
+        // Send a request to the server to generate an OTP and send it to the user's email
+        // You can use a fetch() or XMLHttpRequest() to send the request
+
+        // Show the OTP input and login button
+        var otpInput = document.getElementById("otp-input");
+        var loginButton = document.getElementById("login-button");
+        otpInput.style.display = "block";
+        loginButton.style.display = "block";
+      }
+
+      function handleLogin(form) {
+        // Get the email, password, and OTP from the form
+        var email = form.email.value;
+        var password = form.password.value;
+        var otp = form.otp.value;
+
+        // Check if the login credentials and OTP are correct
+        var users = JSON.parse(fetch("users.json").text());
+        for (var user of users) {
+          if (user.email === email && user.password === password && user.otp === otp) {
+            // The login credentials and OTP are correct, redirect to the second page
+            window.location.href = "rides.html";
+
+            return false; // Prevent the form from submitting normally
+          }
+        }
+
+        // The login credentials or OTP are incorrect, show an error message
+        alert("Invalid login credentials or OTP");
+        return false; // Prevent the form from submitting normally
+      }
+    </script>
+  </body>
+  <marquee behavior="scroll" direction="left">
+    <span style="color:rgb(89, 0, 255); text-transform: uppercase;">© PROUDLY BUILT AND POWERED BY :DENTON ICT SUPPORT TEAM, CONTACT US ON: +145372893</span>
+  </marquee>
+</html>
